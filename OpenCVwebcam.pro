@@ -17,12 +17,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp \
-    videoopencv.cpp
+    mainwindow.cpp
 
 HEADERS += \
-    mainwindow.h \
-    videoopencv.h
+    mainwindow.h
 
 FORMS += \
     mainwindow.ui
@@ -42,10 +40,15 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 #RESOURCES += \
 #    Resources.qrc
 
-
+#DISTFILES += \
+#    minus.png \
+#    plus.png
 
 CONFIG += link_pkgconfig
 PKGCONFIG += opencv4
 
 QMAKE_CXXFLAGS+= -fopenmp
 QMAKE_LFLAGS +=  -fopenmp
+
+QMAKE_CXXFLAGS += -std=c++0x -pthread
+LIBS += -pthread
