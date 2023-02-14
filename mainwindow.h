@@ -91,5 +91,6 @@ private slots:
   void on_PBTrun_2_clicked();
   void on_rand_clicked();
   void on_analyze_clicked();
+  //void on_spinBox_valueChanged(int arg1);
 };
 #endif // MAINWINDOW_H

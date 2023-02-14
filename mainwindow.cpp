@@ -140,6 +140,14 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),ui(new Ui::MainWind
       ui->sensitivity_1->setText(QString::number(val));
     });
 
+  //spinbox
+  ui->spinBox->setRange(1,10);
+  ui->spinBox->setValue(7);
+
+
+
+
+
   it = 1;
   count = 1;
   no_movement = 1;
@@ -178,9 +186,12 @@ void MainWindow::runCamera(void){
 
     }else if(this->RUNNING==false){
       QString file = ui->camPort->text();
-      cv::VideoCapture cap(0);
-      //cap.open(NameVideo);
+      //cv::VideoCapture cap(0);
+      cv::VideoCapture cap;
+      cap.open(NameVideo);
       //cap.open(0);
+
+
       //      cap.set(CAP_PROP_FRAME_WIDTH, 800);
       //      cap.set(CAP_PROP_FRAME_HEIGHT, 600);
       //cap.set(CAP_PROP_FPS, 30);
@@ -225,16 +236,21 @@ void MainWindow::runCamera(void){
 
 
           QString a = ui->sensitivity_1->text();
-          //qDebug() << "change: " << a;
+
+          //QString k_ = ui->sensitivity_value->text();
+
+          //QString m = ui->spinBox->text();
+          int kernel = ui->spinBox->value();
+          //int kernel = k_.toInt();
+
+          //qDebug() << "change: " << ui->spinBox->text();
           //          std::thread first (foo,frame,3000);
           //          first.join();
 
 
           QImage src,srcmov;
           // value acumula el valor de movimiento de cada 100 frames
-
-          //cout<<(filters(frame,frame1,count,7))<<endl;
-          value += filters(frame,frame1,mov,7);
+          value += filters(frame,frame1,mov,kernel);
           //Limages.push_back(make_pair(frame,frame1));
 
 
@@ -326,7 +342,7 @@ int MainWindow::filters(Mat img1,Mat img2,Mat &mov,int k)
   cvtColor(image02, image02bw, COLOR_RGB2GRAY, 1);
   absdiff(image01, image02bw, d);
 
-  GaussianBlur(d, d, Size(k, k), 5, 3);
+  GaussianBlur(d, d, Size(k, k), 5,3);
   Canny(d, d, 45, 80);
 
   Mat kernel = getStructuringElement(MORPH_RECT, Size(5,5));
@@ -436,4 +452,13 @@ int MainWindow::ValueLines(int val)
     }
   return no_movement;
 }
+
+
+//void MainWindow::on_spinBox_valueChanged(int arg1)
+//{
+//  int val = ui->spinBox->value();
+////      if(val % 2 == 1)
+////          ui->spinBox->setValue(val-1);
+//  ui->label_3->setText(QString::number(arg1));
+//}
 
