@@ -13,7 +13,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsItem>
-#include <threads.h>
+#include <thread>
 #include <opencv2/opencv.hpp>
 #include <QMessageBox>
 #include <iostream>
