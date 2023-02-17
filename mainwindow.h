@@ -61,7 +61,7 @@ private:
   int width;
   int height;
   int camPort = 0;
-  std::vector<pair<double,int>> histogramValues;
+  std::vector<pair<int,int>> histogramValues;
   //********video info**********
   string NameVideo;
   int NumberFrames;
@@ -80,6 +80,7 @@ private:
 
   int *arr;
   size_t size;
+  int flag;
   QGraphicsScene *scene;
   int it,count,forwad,anterior;
 
@@ -93,7 +94,7 @@ private:
 
   int m_width;
 
-  void drawlines(QGraphicsScene *scene, int *array, size_t sizeGiven, int delay,QColor c);
+  void drawlines(QGraphicsScene *scene, int *array, size_t sizeGiven,QColor c);
   int ValueLines(int val);
 
   void add_lines(int value);
@@ -118,5 +119,11 @@ private slots:
   void on_back_clicked();
   void on_go_clicked();
   void on_fill_clicked();
+  void on_go_2_clicked();
+  void on_mainderecha_valueChanged(int value);
+  void on_mainizquierda_valueChanged(int value);
+  void on_actionAbrir_triggered();
+  void on_actionGuardar_triggered();
+  void on_actionSalir_triggered();
 };
 #endif // MAINWINDOW_H

@@ -29,18 +29,18 @@ void ReadCSV(string file, int lines)
   int cont = lines;
   string frame,line;
   while(ip.good() && cont--)
-  {
-    getline(ip,frame,',');     // 1
-    getline(ip,line,'\n');// 2
-    cout<<"frame: "<<frame<<" |"<<"line: "<<line<<" |"<<endl;
-  }
+    {
+      getline(ip,frame,',');     // 1
+      getline(ip,line,'\n');// 2
+      cout<<"frame: "<<frame<<" |"<<"line: "<<line<<" |"<<endl;
+    }
   ip.close();
 }
 
 
 void SaveCSV(string file,double m, int n)
 {
- ofstream myfile;
+  ofstream myfile;
   myfile.open(file+".csv");
 
   myfile << m <<","<<n<<endl;
@@ -179,13 +179,13 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),ui(new Ui::MainWind
   ui->setupUi(this);
 
 
-  mMediaPlayer = new QMediaPlayer(this);
-  mVideoWitget = new QVideoWidget(this);
+//  mMediaPlayer = new QMediaPlayer(this);
+//  mVideoWitget = new QVideoWidget(this);
 
-  mMediaPlayer->setVideoOutput(mVideoWitget);
+//  mMediaPlayer->setVideoOutput(mVideoWitget);
 
 
-  mVideoWitget->show();
+//  mVideoWitget->show();
 
 
   QGraphicsScene *m_scene = new QGraphicsScene(this);
@@ -195,37 +195,37 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),ui(new Ui::MainWind
 
 
 
-  ui->graphicsView_1->setScene(m_scene);
-  ui->graphicsView_1->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  ui->graphicsView_1->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  ui->graphicsView_1->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+//  ui->graphicsView_1->setScene(m_scene);
+//  ui->graphicsView_1->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//  ui->graphicsView_1->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//  ui->graphicsView_1->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
 
-  QGraphicsVideoItem *video_item = new QGraphicsVideoItem();
-  m_scene->addItem(video_item);
-  mMediaPlayer ->setVideoOutput(video_item );
-  mMediaPlayer ->play();
+//  QGraphicsVideoItem *video_item = new QGraphicsVideoItem();
+//  m_scene->addItem(video_item);
+//  mMediaPlayer ->setVideoOutput(video_item );
+//  mMediaPlayer ->play();
 
 
 
 
-  connect(mMediaPlayer,&QMediaPlayer::positionChanged,[&](qint64 pos){
-    ui->avance->setValue(pos);
-  });
+//  connect(mMediaPlayer,&QMediaPlayer::positionChanged,[&](qint64 pos){
+//    ui->avance->setValue(pos);
+//  });
 
-  connect(mMediaPlayer,&QMediaPlayer::durationChanged,[&](qint64 dur){
-    ui->avance->setMaximum(dur);
-  });
+//  connect(mMediaPlayer,&QMediaPlayer::durationChanged,[&](qint64 dur){
+//    ui->avance->setMaximum(dur);
+//  });
 
-  connect(mMediaPlayer,&QMediaPlayer::durationChanged,[&](qint64 dur){
-    ui->advance->setMaximum(dur);
-    mMediaPlayer->setPosition(dur);
-  });
+//  connect(mMediaPlayer,&QMediaPlayer::durationChanged,[&](qint64 dur){
+//    ui->advance->setMaximum(dur);
+//    mMediaPlayer->setPosition(dur);
+//  });
 
 
-  ui->advance->setValue(mMediaPlayer->position());
-  connect(ui -> advance, &QSlider::sliderMoved, mMediaPlayer, &QMediaPlayer::setPosition);
-  connect(mMediaPlayer, &QMediaPlayer::positionChanged, ui -> advance, &QSlider::value);
+//  ui->advance->setValue(mMediaPlayer->position());
+//  connect(ui -> advance, &QSlider::sliderMoved, mMediaPlayer, &QMediaPlayer::setPosition);
+//  connect(mMediaPlayer, &QMediaPlayer::positionChanged, ui -> advance, &QSlider::value);
 
 
 
@@ -240,20 +240,20 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),ui(new Ui::MainWind
 
 
 
-  connect(ui->horizontalSlider,&QSlider::sliderMoved,this,[=]{
-      int val=ui->horizontalSlider->value();
-      ui->sensitivity_1->setText(QString::number(val));
-    });
+//  connect(ui->horizontalSlider,&QSlider::sliderMoved,this,[=]{
+//      int val=ui->horizontalSlider->value();
+//      ui->sensitivity_1->setText(QString::number(val));
+//    });
 
-  connect(ui->advance,&QSlider::sliderMoved,this,[=]{
-      int val=ui->advance->value();
-      ui->setframe->setText(QString::number(val));
-    });
-
-//  connect(ui->setframe,&QSlider::sliderMoved,this,[=]{
+//  connect(ui->advance,&QSlider::sliderMoved,this,[=]{
 //      int val=ui->advance->value();
 //      ui->setframe->setText(QString::number(val));
 //    });
+
+  //  connect(ui->setframe,&QSlider::sliderMoved,this,[=]{
+  //      int val=ui->advance->value();
+  //      ui->setframe->setText(QString::number(val));
+  //    });
 
   //  connect(mMediaPlayer,&QMediaPlayer::durationChanged,[&](qint64 dur){
   //    ui->advance->setMaximum(dur);
@@ -266,8 +266,11 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),ui(new Ui::MainWind
 
 
   //spinbox
-  ui->spinBox->setRange(1,10);
+  ui->spinBox->setRange(1,11);
   ui->spinBox->setValue(7);
+
+//  ui->mainderecha->setValue(0);
+//  ui->mainizquierda->setValue(30);
 
 
 
@@ -280,23 +283,22 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),ui(new Ui::MainWind
   arr = new int [10000];
   scene = new QGraphicsScene();
 
-//  //  int arry[] = {2};
-//    for(size_t i = 0; i < 20; ++i) {
-//        //add_lines(rand() % 10 + 1);
-//  //arr[i] = rand() % 10 + 1;
-//  //std::cout<<arr[i]<<std::endl;
-//  }
+  //  //  int arry[] = {2};
+  //    for(size_t i = 0; i < 20; ++i) {
+  //        //add_lines(rand() % 10 + 1);
+  //  //arr[i] = rand() % 10 + 1;
+  //  //std::cout<<arr[i]<<std::endl;
+  //  }
 
 
 
-  arr[0] = no_movement;
-
+  arr[0] = 15;
+  flag =0;
 
 
   ui->graphicsView->setScene(scene);
-
   //  sort = new mergesort(scene, arr);
-  drawlines(scene, arr, it, 10000,ORANGE);
+  drawlines(scene, arr, it,RED);
 
 }
 
@@ -328,7 +330,7 @@ void MainWindow::runCamera(void){
       //      cap.set(CAP_PROP_FRAME_HEIGHT, 600);
       //cap.set(CAP_PROP_FPS, 30);
 
-      //int fps = cap.get(CAP_PROP_FPS);
+      int fps = cap.get(CAP_PROP_FPS);
 
 
 
@@ -354,8 +356,8 @@ void MainWindow::runCamera(void){
 
       //cout<<frame_Number<<endl;
 
-      //LengthVideo = (NumberFrames/fps);
-      //ui->ValueDuracion->setText(QString::fromStdString(to_string(LengthVideo/60)));
+      LengthVideo = (NumberFrames/fps);
+      ui->ValueDuracion->setText(QString::fromStdString(to_string(LengthVideo/60)));
 
       int iter(0);
       int value(0);
@@ -367,7 +369,7 @@ void MainWindow::runCamera(void){
 
 
 
-          QString a = ui->sensitivity_1->text();
+          //QString a = ui->sensitivity_1->text();
 
           //QString k_ = ui->sensitivity_value->text();
 
@@ -392,7 +394,9 @@ void MainWindow::runCamera(void){
               add_lines(line);
               //qDebug()<<iter<<"  "<<line;
 
-              histogramValues.push_back(make_pair(iter,line));
+
+
+              //****************************In this part we add line and frame value to .CSV file*******************
 
               value=0;
               //Limages.clear();
@@ -434,15 +438,15 @@ void MainWindow::on_PBTrun_2_clicked()
 
 
 
-void MainWindow::drawlines(QGraphicsScene *scene, int *array, size_t sizeGiven, int delay,QColor c)
+void MainWindow::drawlines(QGraphicsScene *scene, int *array, size_t sizeGiven,QColor c)
 {
   arr = array;
   // Randomize array(?)
   size = sizeGiven;
   m_scene = scene;
-  m_delay = delay;
+
   //m_width = (512/size < 1) ? 1 : 512/size;
-  m_width = 2;
+  m_width = 3;
   //debug(size);
   //debug(m_width);
   for(size_t i = 0; i < size; ++i) {
@@ -499,7 +503,7 @@ void MainWindow::add_lines(int value)
   it++;
   arr[count] = value;
   count++;
-  drawlines(scene, arr, it, 10000,ORANGE);
+  drawlines(scene, arr, it,ORANGE);
 }
 
 
@@ -531,8 +535,8 @@ void MainWindow::on_analyze_clicked()
   Mat frame,frame1;
 
 
-  QString a = ui->sensitivity_1->text();
-  qDebug() << "change: " << a;
+  //QString a = ui->sensitivity_1->text();
+  //qDebug() << "change: " << a;
 
   //  std::thread first (foo,1,10,"primero");
   //  std::thread second (foo,5550,5560,"segundo");
@@ -647,13 +651,14 @@ void MainWindow::on_pushButton_clicked()
   cvtColor(frame, frame, COLOR_BGR2RGB);
   srcmov = QImage(frame.data, frame.cols, frame.rows, QImage::Format_RGB888);
   ui->SRC->setPixmap(QPixmap::fromImage(srcmov).scaled(ui->SRC->width(), ui->SRC->height(), Qt::KeepAspectRatio));
+  qDebug()<<histogramValues.size();
 }
 
 
 void MainWindow::on_next_clicked()
 {
   QString value = ui->pos->text();
-  int change = value.toInt() + 1;
+  int change = value.toInt() + 7;
   ui->pos->setText(QString::number(change));
   on_pushButton_clicked();
 
@@ -663,7 +668,7 @@ void MainWindow::on_next_clicked()
 void MainWindow::on_back_clicked()
 {
   QString value = ui->pos->text();
-  int change = value.toInt() - 1;
+  int change = value.toInt() - 7;
   ui->pos->setText(QString::number(change));
   on_pushButton_clicked();
 
@@ -675,54 +680,91 @@ void MainWindow::on_rand_clicked()
   arr[count] = rand() % 10 + 1;
 
   count++;
-  drawlines(scene, arr, it, 10000,ORANGE);
+  drawlines(scene, arr, it,ORANGE);
 }
 
 
 void Swap_(int &x,int &y)
 {
-    int temp;
-    temp = x;
-    x = y;
-    y = temp;
+  int temp;
+  temp = x;
+  x = y;
+  y = temp;
+}
+
+void MainWindow::on_fill_clicked()
+{
+  ifstream ip("test.csv");
+
+  if(!ip.is_open()) std::cout << "ERROR: File Open" << '\n';
+  int cont = 738;
+  string frame,line;
+  while(ip.good() && cont--)
+    {
+      it++;
+      getline(ip,frame,',');     // 1
+      getline(ip,line,'\n');// 2
+      arr[count] = stoi(line);
+      histogramValues.push_back(make_pair(QString::fromStdString (frame).toInt(),QString::fromStdString (line).toInt()));
+      count++;
+      //cout<<"frame: "<<frame<<" |"<<"line: "<<line<<" |"<<endl;
+      drawlines(scene, arr, it,ORANGE);
+    }
+  ip.close();
+//  cout<<"26600"<<endl;
+//  cout<<"37351"<<endl;
 }
 
 void MainWindow::on_go_clicked()
 {
-  if(forwad==0){
-      anterior = arr[forwad];
-      arr[forwad] = 20;
-      drawlines(scene,arr,it,10000,GREEN);
-      forwad++;
-    }
-  else{
-      arr[forwad-1] = anterior;
-      drawlines(scene,arr,it,10000,ORANGE);
-      anterior = arr[forwad];
-      arr[forwad] = 20;
-      drawlines(scene,arr,it,10000,WHITE);
-      forwad++;
+  int temp = arr[flag];
+  arr[flag] = arr[flag+1];
+  arr[flag+1] = temp;
+ drawlines(scene, arr, it, ORANGE);
+ scene->clear();
+ ui->graphicsView->items().clear();
+  drawlines(scene, arr, it, RED);
+  flag++;
+}
 
-      drawlines(scene,arr,it,10000,RED);
-    }
-
-  ui->pos->setText(QString::number(forwad));
-
-  //ReadCSV("test",30);
-
-//std::cout<<"/"<<anterior<<std::endl;
-
+void MainWindow::on_go_2_clicked()
+{
+  int temp = arr[flag];
+  arr[flag] = arr[flag-1];
+  arr[flag-1] = temp;
+ drawlines(scene, arr, it, ORANGE);
+ scene->clear();
+ ui->graphicsView->items().clear();
+  drawlines(scene, arr, it, RED);
+  flag--;
 }
 
 
-
-void MainWindow::on_fill_clicked()
+void MainWindow::on_mainderecha_valueChanged(int value)
 {
-  for(size_t i = 0; i < 400; ++i) {
-    it++;
-    arr[count] = rand() % 10 + 1;
-    count++;
-    drawlines(scene, arr, it, 10000,ORANGE);
-    }
+    on_go_clicked();
+    ui->pos->setText(QString::number(histogramValues[flag].first));
+}
+
+
+void MainWindow::on_mainizquierda_valueChanged(int value)
+{
+    on_go_2_clicked();
+    ui->pos->setText(QString::number(histogramValues[flag].first));
+}
+
+
+void MainWindow::on_actionAbrir_triggered()
+{
+
+}
+
+void MainWindow::on_actionGuardar_triggered()
+{
+
+}
+
+void MainWindow::on_actionSalir_triggered()
+{
 
 }
