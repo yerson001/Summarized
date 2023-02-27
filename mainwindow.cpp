@@ -12,16 +12,43 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <omp.h>
-#include <QMediaPlayer>
-#include <QVideoWidget>
-#include <QGraphicsVideoItem>
+//#include <QMediaPlayer>
+//#include <QVideoWidget>
+//#include <QGraphicsVideoItem>
 #include <fstream>
 #include <sstream>
+#include <moveitem.h>
 
 using namespace std;
 using namespace cv;
 
-void ReadCSV(string file, int lines)
+//void spawnThreads(int n)
+//{
+//  cv::VideoCapture cap;
+//  cap.open("/home/yrsn/Videos/test.mp4");
+
+//  int NumberFrames = cap.get(CAP_PROP_FRAME_COUNT);
+//  cout<<"Number frames: "<<NumberFrames<<endl;
+//  vector<pair<int,int>> goo = Limit(NumberFrames,n);
+
+//  for(int i=0; i<goo.size(); i++){
+//      cout<<goo[i].first<<" ---- "<<goo[i].second<<endl;
+//    }
+
+//  std::vector<thread> threads(n);
+//  // spawn n threads:
+//  for (int i = 0; i < n; i++) {
+//      threads[i] = thread(foo,goo[i].first,goo[i].second,"f");
+//    }
+
+//  for (auto& th : threads) {
+//      th.join();
+//    }
+//}
+
+
+
+void MainWindow::ReadCSV(string file, int lines)
 {
   ifstream ip(file+".csv");
 
@@ -32,13 +59,13 @@ void ReadCSV(string file, int lines)
     {
       getline(ip,frame,',');     // 1
       getline(ip,line,'\n');// 2
-      cout<<"frame: "<<frame<<" |"<<"line: "<<line<<" |"<<endl;
+      //cout<<"frame: "<<frame<<" |"<<"line: "<<line<<" |"<<endl;
     }
   ip.close();
 }
 
 
-void SaveCSV(string file,double m, int n)
+void MainWindow::SaveCSV(string file,double m, int n)
 {
   ofstream myfile;
   myfile.open(file+".csv");
@@ -48,19 +75,15 @@ void SaveCSV(string file,double m, int n)
 
 
 
-Mat ResizeImage(Mat &image, float scale)
+Mat MainWindow::ResizeImage(Mat &image, float scale)
 {
   Mat resized;
-  resize(image, resized, Size(image.cols*scale, image.rows*scale), INTER_LINEAR);
+  cv::resize(image, resized, Size(image.cols*scale, image.rows*scale), INTER_LINEAR);
   return resized;
 }
 
-void blur(cv::Mat &image)
-{
-  GaussianBlur(image, image, cv::Size(7,7), -1);
-}
 
-vector<pair<int,int>> Limit(int t_number,int n)
+vector<pair<int,int> > MainWindow::Limit(int t_number,int n)
 {
   vector<pair<int,int>> ranges;
   int range = t_number/n;
@@ -71,7 +94,7 @@ vector<pair<int,int>> Limit(int t_number,int n)
   return ranges;
 }
 
-int filtro(Mat img1,Mat img2,int k)
+int MainWindow::filtro(Mat img1,Mat img2,int k)
 {
   cv::Mat image01,image02,image02bw,d;
   img1.convertTo(image01, CV_8UC1);
@@ -100,7 +123,7 @@ int filtro(Mat img1,Mat img2,int k)
   return abs(nonZero-img1.rows*img1.cols);
 }
 
-void foo(int m,int n,string nameW)
+void MainWindow::foo(int m,int n,string nameW)
 {
   Mat frame,frame1;
   cv::VideoCapture capture;
@@ -117,7 +140,7 @@ void foo(int m,int n,string nameW)
 
 }
 
-void IntervalVideo(int m,int n)
+void MainWindow::IntervalVideo(int m,int n)
 {
   Mat frame,frame1;
   cv::VideoCapture capture;
@@ -135,30 +158,6 @@ void IntervalVideo(int m,int n)
 }
 
 
-
-void spawnThreads(int n)
-{
-  cv::VideoCapture cap;
-  cap.open("/home/yrsn/Videos/test.mp4");
-
-  int NumberFrames = cap.get(CAP_PROP_FRAME_COUNT);
-  cout<<"Number frames: "<<NumberFrames<<endl;
-  vector<pair<int,int>> goo = Limit(NumberFrames,n);
-
-  for(int i=0; i<goo.size(); i++){
-      cout<<goo[i].first<<" ---- "<<goo[i].second<<endl;
-    }
-
-  std::vector<thread> threads(n);
-  // spawn n threads:
-  for (int i = 0; i < n; i++) {
-      threads[i] = thread(foo,goo[i].first,goo[i].second,"f");
-    }
-
-  for (auto& th : threads) {
-      th.join();
-    }
-}
 
 
 Mat dummy_1ch = Mat::zeros(Size(800, 600), CV_8UC1);
@@ -263,6 +262,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),ui(new Ui::MainWind
   //FRAME_RANGE = (ui->framespersecond->text()).toInt();
 
   FRAME_RANGE = 100;
+  color = 1;
 
 
   //spinbox
@@ -299,6 +299,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),ui(new Ui::MainWind
   ui->graphicsView->setScene(scene);
   //  sort = new mergesort(scene, arr);
   drawlines(scene, arr, it,RED);
+
+//  MoveItem *item = new MoveItem();
+//  item->setPos(0,477);
+//  scene->addItem(item);
+
+  second = new Analysis();
 
 }
 
@@ -397,6 +403,7 @@ void MainWindow::runCamera(void){
 
 
               //****************************In this part we add line and frame value to .CSV file*******************
+              histogramCsv.push_back(make_pair(iter,line));
 
               value=0;
               //Limages.clear();
@@ -452,19 +459,28 @@ void MainWindow::drawlines(QGraphicsScene *scene, int *array, size_t sizeGiven,Q
   for(size_t i = 0; i < size; ++i) {
       int height = (arr[i] + 1) * m_width+2;
       float left = (i * m_width);
-      //int intLeft = left * 1;
+      int intLeft = left * 1;
 
-      //          if(left - intLeft < 0.1) {
-      //              left = intLeft;
-      //            } else if(left - intLeft < 0.6) {
-      //              left = intLeft + 0.5;
-      //            } else {
-      //              left = intLeft + 1;
-      //            }
+                if(left - intLeft < 0.1) {
+                    left = intLeft;
+                  } else if(left - intLeft < 0.6) {
+                    left = intLeft + 0.5;
+                  } else {
+                    left = intLeft + 1;
+                  }
+
+
       int up = 540-height;
       QPen pen = QPen(Qt::black);
       QBrush brush = QBrush(c);
-      m_rects.push_back(m_scene->addRect(left, up, m_width, height, pen, brush));
+      if(color){
+          QBrush brush = QBrush(RED);
+          m_rects.push_back(m_scene->addRect(left, up, m_width, height, pen, brush));
+          color = 0;
+        }
+      else{
+          m_rects.push_back(m_scene->addRect(left, up, m_width, height, pen, brush));
+        }
     }
 }
 
@@ -545,7 +561,7 @@ void MainWindow::on_analyze_clicked()
   //  second.join();
   //  third.join();
 
-  spawnThreads(10);
+  //spawnThreads(10);
 
   //  foo(1,10);
   //  foo(5550,5555);
@@ -593,34 +609,34 @@ int MainWindow::ValueLines(int val)
 //}
 
 
-void MainWindow::on_abrir_clicked()
-{
-  QString filename = QFileDialog::getOpenFileName(this,"abrir");
-  if(filename.isEmpty()){
-      return;
-    }
-  mMediaPlayer->setMedia(QUrl::fromLocalFile(filename));
-  on_play_clicked();
+//void MainWindow::on_abrir_clicked()
+//{
+//  QString filename = QFileDialog::getOpenFileName(this,"abrir");
+//  if(filename.isEmpty()){
+//      return;
+//    }
+//  mMediaPlayer->setMedia(QUrl::fromLocalFile(filename));
+//  on_play_clicked();
 
-}
-
-
-void MainWindow::on_play_clicked()
-{
-  mMediaPlayer->play();
-}
+//}
 
 
-void MainWindow::on_pause_clicked()
-{
-  mMediaPlayer->pause();
-}
+//void MainWindow::on_play_clicked()
+//{
+//  mMediaPlayer->play();
+//}
 
 
-void MainWindow::on_stop_clicked()
-{
-  mMediaPlayer->stop();
-}
+//void MainWindow::on_pause_clicked()
+//{
+//  mMediaPlayer->pause();
+//}
+
+
+//void MainWindow::on_stop_clicked()
+//{
+//  mMediaPlayer->stop();
+//}
 
 
 //void MainWindow::resizeEvent(QResizeEvent *)
@@ -651,7 +667,7 @@ void MainWindow::on_pushButton_clicked()
   cvtColor(frame, frame, COLOR_BGR2RGB);
   srcmov = QImage(frame.data, frame.cols, frame.rows, QImage::Format_RGB888);
   ui->SRC->setPixmap(QPixmap::fromImage(srcmov).scaled(ui->SRC->width(), ui->SRC->height(), Qt::KeepAspectRatio));
-  qDebug()<<histogramValues.size();
+  //qDebug()<<histogramValues.size();
 }
 
 
@@ -661,7 +677,6 @@ void MainWindow::on_next_clicked()
   int change = value.toInt() + 7;
   ui->pos->setText(QString::number(change));
   on_pushButton_clicked();
-
 }
 
 
@@ -710,6 +725,9 @@ void MainWindow::on_fill_clicked()
       //cout<<"frame: "<<frame<<" |"<<"line: "<<line<<" |"<<endl;
       drawlines(scene, arr, it,ORANGE);
     }
+  MoveItem *item = new MoveItem();
+  item->setPos(0,477);
+  scene->addItem(item);
   ip.close();
 //  cout<<"26600"<<endl;
 //  cout<<"37351"<<endl;
@@ -725,6 +743,7 @@ void MainWindow::on_go_clicked()
  ui->graphicsView->items().clear();
   drawlines(scene, arr, it, RED);
   flag++;
+  ui->pos->setText(QString::number(histogramValues[flag].first));
 }
 
 void MainWindow::on_go_2_clicked()
@@ -737,6 +756,7 @@ void MainWindow::on_go_2_clicked()
  ui->graphicsView->items().clear();
   drawlines(scene, arr, it, RED);
   flag--;
+  ui->pos->setText(QString::number(histogramValues[flag].first));
 }
 
 
@@ -761,6 +781,15 @@ void MainWindow::on_actionAbrir_triggered()
 
 void MainWindow::on_actionGuardar_triggered()
 {
+//  ofstream myfile;
+//    myfile.open("video.csv");
+//   for(size_t i = 0; i < histogramCsv.size(); ++i) {
+
+//          myfile<<histogramValues[i].first<<","<<histogramValues[i].second<<endl;
+//    }
+//   myfile.close();
+
+  qDebug()<<"hpñacpm,p es";
 
 }
 
@@ -768,3 +797,33 @@ void MainWindow::on_actionSalir_triggered()
 {
 
 }
+
+void MainWindow::on_analyze_2_clicked()
+{
+  ofstream myfile;
+    myfile.open("video.csv");
+   for(size_t i = 0; i < histogramCsv.size(); ++i) {
+
+          myfile<<histogramValues[i].first<<","<<histogramValues[i].second<<endl;
+    }
+   myfile.close();
+}
+
+
+
+
+void MainWindow::on_next_2_clicked()
+{
+
+  if(second->isVisible())
+      {
+          second->hide();
+          this->show();
+      }
+      else
+      {
+          this->hide();
+          second->show();
+      }
+}
+

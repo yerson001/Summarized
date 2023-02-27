@@ -18,7 +18,8 @@
 #include <QMessageBox>
 #include <iostream>
 #include <vector>
-
+#include <pthread.h>
+#include <analysis.h>
 using namespace cv;
 using namespace std;
 
@@ -36,8 +37,11 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-class QMediaPlayer;
-class QVideoWidget;
+
+
+
+//class QMediaPlayer;
+//class QVideoWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -45,6 +49,7 @@ class MainWindow : public QMainWindow
 
 public:
   MainWindow(QWidget *parent = nullptr);
+  vector<pair<int,int> > Limit(int t_number,int n);
   ~MainWindow();
 
 protected:
@@ -54,14 +59,20 @@ protected:
 
 private:
   Ui::MainWindow *ui;
-  QMediaPlayer *mMediaPlayer;
-  QVideoWidget *mVideoWitget;
+  Analysis *second;
+
+  //QMediaPlayer *mMediaPlayer;
+  //QVideoWidget *mVideoWitget;
+
+
 
   bool RUNNING = false;
+  bool color;
   int width;
   int height;
   int camPort = 0;
   std::vector<pair<int,int>> histogramValues;
+  std::vector<pair<int,int>> histogramCsv;
   //********video info**********
   string NameVideo;
   int NumberFrames;
@@ -90,14 +101,21 @@ private:
   QGraphicsScene* m_video;
   //size_t size;
   std::vector<QGraphicsRectItem *> m_rects;
-  int m_delay;
+
 
   int m_width;
 
   void drawlines(QGraphicsScene *scene, int *array, size_t sizeGiven,QColor c);
   int ValueLines(int val);
-
   void add_lines(int value);
+  void ReadCSV(string file, int lines);
+  void SaveCSV(string file,double m, int n);
+  Mat ResizeImage(Mat &image, float scale);
+
+  int filtro(Mat img1,Mat img2,int k);
+  void foo(int m,int n,string nameW);
+  void IntervalVideo(int m,int n);
+  //void spawnThreads(int n);
 
 
 
@@ -110,10 +128,10 @@ private slots:
   void on_rand_clicked();
   void on_analyze_clicked();
   //void on_spinBox_valueChanged(int arg1);
-  void on_abrir_clicked();
-  void on_play_clicked();
-  void on_pause_clicked();
-  void on_stop_clicked();
+//  void on_abrir_clicked();
+//  void on_play_clicked();
+//  void on_pause_clicked();
+//  void on_stop_clicked();
   void on_pushButton_clicked();
   void on_next_clicked();
   void on_back_clicked();
@@ -125,5 +143,8 @@ private slots:
   void on_actionAbrir_triggered();
   void on_actionGuardar_triggered();
   void on_actionSalir_triggered();
+  void on_analyze_2_clicked();
+
+  void on_next_2_clicked();
 };
 #endif // MAINWINDOW_H
