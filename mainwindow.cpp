@@ -69,7 +69,7 @@ void MainWindow::getFrame()
 void MainWindow::SetHistogram()
 {
   int count_ = 0;
-  ifstream ip("test.csv");
+  ifstream ip(OnlyName+".csv");
   if(!ip.is_open()) qDebug() << "ERROR: File Open" << '\n';
   int cont = 738;
   string frame,line;
@@ -189,6 +189,10 @@ int MainWindow::filters(Mat img1,Mat img2,Mat &mov,int k)
   rectangle(image01, Point2d(50,50),Point2d(800,120), (127,0,0),-1, LINE_8);
   rectangle(image02, Point2d(50,50),Point2d(800,120), (127,0,0),-1, LINE_8);
   //imshow("image01", RI(image01,0.5));
+  if(image01.empty()){
+      cout<<" no hay imagen"<<endl;
+
+    }
   cvtColor(image01, image01, COLOR_RGB2GRAY, 1);
   cvtColor(image02, image02bw, COLOR_RGB2GRAY, 1);
   absdiff(image01, image02bw, d);
@@ -233,13 +237,17 @@ void MainWindow::on_mainpage_2_clicked()
 
 void MainWindow::on_openfile_clicked()
 {
+  NameVideo.clear();
   ui->stackedWidget_3->setCurrentIndex(0);
   QString filename=QFileDialog::getOpenFileName(this,tr("openfile"),QDir::currentPath());
   NameVideo = filename.toLocal8Bit().constData();
+   OnlyName = realname();
   //set video name
-  ui->ValueNameVideo->setText(QString::fromStdString(NameVideo));
-
+  ui->ValueNameVideo->setText(QString::fromStdString(OnlyName));
   cap.open(NameVideo);
+
+
+
   //****** get and set number frames value ************
   int NumberFrames = cap.get(CAP_PROP_FRAME_COUNT);
   ui->ValueNumberFrames->setText(QString::fromStdString(to_string(NumberFrames)));
@@ -278,7 +286,8 @@ void MainWindow::on_start_clicked()
 
       int value(0),iter(0);
 
-      while(RUNNING==true){
+//      while(RUNNING==true){
+      for(int i=0; i<NumberFrames-10; i++){
           cap >> frame;
           cap >> frame1;
 
@@ -318,15 +327,17 @@ void MainWindow::on_start_clicked()
       cap.release();
     }
 
-
 }
 
 void MainWindow::on_openfileAnalisis_clicked()
 {
+  NameVideo.clear();
   QString filename=QFileDialog::getOpenFileName(this,tr("openfile"),QDir::currentPath());
   NameVideo = filename.toLocal8Bit().constData();
+
+  OnlyName = realname();
   //set video name
-  ui->ValueNameVideo1->setText(QString::fromStdString(NameVideo));
+  ui->ValueNameVideo1->setText(QString::fromStdString(OnlyName));
   cap.open(NameVideo);
   //****** get and set number frames value ************
   int NumberFrames = cap.get(CAP_PROP_FRAME_COUNT);
@@ -382,18 +393,47 @@ void MainWindow::on_back_clicked()
 
 void MainWindow::on_guardar_clicked()
 {
-  ofstream myfile;
-  myfile.open("test1.csv");
-  int t = histogramCsv.size();
-  t=10;
-  for(size_t i =0; i<t; i++){
-      myfile<<histogramCsv[i].first<<","<<histogramCsv[i].second<<std::endl;
-    }
+
+  string filername = OnlyName+".csv";
+  cout<<filername<<endl;
+    fstream File;
+    File.open(filername, std::fstream::in | std::fstream::out | std::fstream::app);
+     // If file does not exist, Create new file
+     if (!File )
+     {
+       cout << "crear archivo";
+       File.open(filername,  fstream::in | fstream::out | fstream::app);
+       File <<"\n";
+       File.close();
+      }
+     else
+     {    // use existing file
+         for(size_t i =0; i<histogramCsv.size(); i++){
+             File<<histogramCsv[i].first<<","<<histogramCsv[i].second<<std::endl;
+           }
+        File.close();
+        cout<<"\n";
+   }
+
+
   QMessageBox::information(this, "Guardar", "Se guardo el archivo");
-      //critical(this, "ERROR", "Please check your camera and port number.", QMessageBox::Ok);
+      //critical(this, "w", "Please check your camera and port number.", QMessageBox::Ok);
   RUNNING = false;
 }
 
+string MainWindow::realname()
+{
+  string str = NameVideo;
+  string rname;
+  string name;
+  size_t pos;
+
+  for(int i=str.size(); i>0; i--){rname+=str[i];}
+   pos=rname.find('/');
+   string str2 = rname.substr (0,pos);
+  for(int i=str2.size()-1; i>4; i--){name+=str2[i];}
+return name;
+}
 
 
 
