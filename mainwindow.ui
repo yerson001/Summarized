@@ -119,13 +119,13 @@
           <set>Qt::AlignCenter</set>
          </property>
         </widget>
-        <widget class="QWidget" name="">
+        <widget class="QWidget" name="layoutWidget">
          <property name="geometry">
           <rect>
            <x>26</x>
            <y>380</y>
-           <width>111</width>
-           <height>51</height>
+           <width>91</width>
+           <height>41</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -857,7 +857,7 @@ color: white;
             <string/>
            </property>
           </widget>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <property name="geometry">
             <rect>
              <x>10</x>
@@ -1008,7 +1008,7 @@ color: white;
             <string>Mostrar Histograma</string>
            </property>
           </widget>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <property name="geometry">
             <rect>
              <x>10</x>
@@ -1118,7 +1118,7 @@ color: white;
 }</string>
           </property>
           <property name="text">
-           <string>Empezar</string>
+           <string>Iniciar</string>
           </property>
          </widget>
          <widget class="QPushButton" name="guardar">
@@ -1134,6 +1134,12 @@ color: white;
            <font>
             <pointsize>9</pointsize>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton
+{
+    background-color:rgb(2, 100, 100);
+}</string>
           </property>
           <property name="text">
            <string>Guardar</string>
