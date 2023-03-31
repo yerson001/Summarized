@@ -114,6 +114,8 @@ private:
    void IntervalVideo(int m,int n);
    void getFrame();
    string realname();
+   int getPosValue();
+   void changevalue(int);
 };
 
 #endif // MAINWINDOW_H
