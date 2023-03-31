@@ -72,6 +72,7 @@ private:
 
   //@******** video info *******
   string NameVideo;
+  string OnlyName;
   int NumberFrames;
   float LengthVideo;
   //*** start slot ****
@@ -83,7 +84,7 @@ private:
    long MAX_MID_VALUE = 1500000;
    long MID_value = 1000000;
    long MIN_MID_VALUE = 500000;
-   long MIN_VALUE = 500;
+   long MIN_VALUE = 700;
 
    //*** now Qgraphics view and histogram *****+
    int *arr;
@@ -112,6 +113,7 @@ private:
    void histogramConfig();
    void IntervalVideo(int m,int n);
    void getFrame();
+   string realname();
 };
 
 #endif // MAINWINDOW_H
