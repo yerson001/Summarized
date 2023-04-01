@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     //**** init config ******
     configSensivility();
-    connect(ui->start, SIGNAL(clicked()), this, SLOT(on_start_clicked()));
+    //connect(ui->start, SIGNAL(clicked()), this, SLOT(on_start_clicked()));
 
     //***********QGRAPHICS***********
     //QGraphicsScene *m_scene = new QGraphicsScene(this);
@@ -234,10 +234,25 @@ void MainWindow::on_mainpage_2_clicked()
 }
 
 
+void MainWindow::resetvalues(){
+  NameVideo.clear();
+  OnlyName.clear();
+  m_scene->clear();
+  als_scene->clear();
+//  it = 1;
+//  count = 1;
+//  forwad = 0;
+//  color = 1;
+//  for (int i = 0; i < 100; i++) {arr[i] = 0;}
+
+}
+
+
 
 void MainWindow::on_openfile_clicked()
 {
     //NameVideo.clear();
+    resetvalues();
     ui->stackedWidget_3->setCurrentIndex(0);
     QString filename=QFileDialog::getOpenFileName(this,tr("openfile"),QDir::currentPath());
     NameVideo = filename.toLocal8Bit().constData();
@@ -272,7 +287,7 @@ void MainWindow::on_start_clicked()
 //    }else if(this->RUNNING==false){
 //qDebug()<<"else";
         //****opencv camera *****
-        cout<<NameVideo<<endl;
+        //cout<<NameVideo<<endl;
         cap.open(NameVideo);
         //Mat fr;
         //cap >> fr;
@@ -282,7 +297,7 @@ void MainWindow::on_start_clicked()
             QMessageBox::critical(this, "ERROR", "Porfavor carge el video.", QMessageBox::Ok);
             return;
         }
-        qDebug()<<"paso imagen";
+        //qDebug()<<"paso imagen";
 
 //    Mat fra;
 //    cap>>fra;
@@ -294,8 +309,10 @@ void MainWindow::on_start_clicked()
         //      pBackSub = createBackgroundSubtractorKNN();
 
         int value(0),iter(0);
+        control = 1;
 
-              while(true){
+
+          while(true && control){
 //        for(int i=0; i<NumberFrames-10; i++)
 //        {
             cap >> frame;
@@ -304,6 +321,7 @@ void MainWindow::on_start_clicked()
             if(frame.empty() || frame1.empty())
             {
                 on_guardar_clicked();
+
                 break;
             }
 
@@ -347,7 +365,7 @@ void MainWindow::on_start_clicked()
 
 void MainWindow::on_openfileAnalisis_clicked()
 {
-    NameVideo.clear();
+    resetvalues();
     QString filename=QFileDialog::getOpenFileName(this,tr("openfile"),QDir::currentPath());
     NameVideo = filename.toLocal8Bit().constData();
 
@@ -404,18 +422,18 @@ void MainWindow::on_goFrame_clicked()
 
 void MainWindow::on_next_clicked()
 {
-    qDebug()<<"next";
+    //qDebug()<<"next";
 
     int change = getPosValue();
-    qDebug()<<"change "<<change;
+    //qDebug()<<"change "<<change;
     changevalue(change+7);
-    qDebug()<<"getpos "<<getPosValue();
+    //qDebug()<<"getpos "<<getPosValue();
     on_goFrame_clicked();
 }
 
 void MainWindow::on_back_clicked()
 {
-    qDebug()<<"back";
+    //qDebug()<<"back";
     int change = getPosValue();
     changevalue(change-7);
     on_goFrame_clicked();
@@ -425,7 +443,7 @@ void MainWindow::on_guardar_clicked()
 {
 
     string filername = OnlyName+".csv";
-    cout<<filername<<endl;
+    //cout<<filername<<endl;
     fstream File;
     File.open(filername, std::fstream::in | std::fstream::out | std::fstream::app);
     // If file does not exist, Create new file
@@ -447,6 +465,7 @@ void MainWindow::on_guardar_clicked()
 
 
     QMessageBox::information(this, "Guardar", "Se guardo el archivo");
+    control = 0;
     //critical(this, "w", "Please check your camera and port number.", QMessageBox::Ok);
     //RUNNING = false;
 }

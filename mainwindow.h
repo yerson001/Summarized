@@ -79,6 +79,7 @@ private:
    bool RUNNING = false;
    int FRAME_RANGE;
    int no_movement;
+   bool control;
    // ******* limits********
    long MAX_VALUE = 2000000;
    long MAX_MID_VALUE = 1500000;
@@ -116,6 +117,7 @@ private:
    string realname();
    int getPosValue();
    void changevalue(int);
+   void resetvalues();
 };
 
 #endif // MAINWINDOW_H
