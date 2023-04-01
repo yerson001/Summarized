@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete[] arr;
+    //delete[] arr;
 }
 
 void MainWindow::getFrame()
@@ -69,6 +69,7 @@ void MainWindow::getFrame()
 void MainWindow::SetHistogram()
 {
     int count_ = 0;
+    //cout<<OnlyName<<endl;
     ifstream ip(OnlyName+".csv");
     if(!ip.is_open()) qDebug() << "ERROR: File Open" << '\n';
     int cont = 738;
@@ -92,11 +93,13 @@ void MainWindow::SetHistogram()
     ip.close();
 }
 
-void MainWindow::drawlines(QGraphicsScene *scene, int *array, size_t sizeGiven,QColor c)
+//void MainWindow::drawlines(QGraphicsScene *scene, int *array, size_t sizeGiven,QColor c)
+void MainWindow::drawlines(QGraphicsScene *scene, vector<int> arr, size_t sizeGiven,QColor c)
 {
-    arr = array;
+    //arr = array;
     // Randomize array(?)
     size = sizeGiven-1;
+
     m_scene = scene;
     //qDebug() << sizeGiven;
 
@@ -124,14 +127,15 @@ void MainWindow::histogramConfig()
     count = 1;
     forwad = 0;
     color = 1;
-    arr = new int [100000];
+    //arr = new int [100000];
     scene = new QGraphicsScene();
     als_scene = new QGraphicsScene();
     //als_scene->addText("hello");
 
 
 
-    arr[0] = 0;
+    //arr[0] = 0;
+    arr.push_back(0);
     flag =0;
     ui->graphicsView->setScene(scene);
     ui->graphicsView_2->setScene(als_scene);
@@ -142,7 +146,8 @@ void MainWindow::histogramConfig()
 void MainWindow::add_lines(int value)
 {
     it++;
-    arr[count] = value;
+    //arr[count] = value;
+    arr.push_back(value);
     count++;
     if(ui->ShowHistogram->isChecked()){
         drawlines(scene, arr, it,GREEN);
@@ -204,6 +209,7 @@ int MainWindow::filters(Mat img1,Mat img2,Mat &mov,int k)
     dilate(d, d, kernel);
     int nonZero = (img1.rows*img1.cols)- countNonZero(d);
     mov = d.clone();
+    //cout<<abs(nonZero-img1.rows*img1.cols)<<endl;
 
     return abs(nonZero-img1.rows*img1.cols);
 }
@@ -239,9 +245,10 @@ void MainWindow::resetvalues(){
   OnlyName.clear();
   m_scene->clear();
   als_scene->clear();
-//  it = 1;
-//  count = 1;
-//  forwad = 0;
+  arr.clear();
+  it = 1;
+  count = 1;
+  forwad = 0;
 //  color = 1;
 //  for (int i = 0; i < 100; i++) {arr[i] = 0;}
 
@@ -342,8 +349,9 @@ void MainWindow::on_start_clicked()
 
                 //*********In this part we add line and frame value to .CSV file*******************
                 histogramCsv.push_back(make_pair(iter,line));
-
+                //cout<<value<<endl;
                 value=0;
+
                 //Limages.clear();
             }
             cvtColor(frame, frame, COLOR_BGR2RGB);
@@ -385,6 +393,7 @@ void MainWindow::on_openfileAnalisis_clicked()
 
 void MainWindow::on_draw_clicked()
 {
+    als_scene->clear();
     SetHistogram();
 //    for(int i=0; i <20; i++){
 //        QGraphicsTextItem *text = als_scene->addText("|",QFont("Helvetica", 16, QFont::Normal));

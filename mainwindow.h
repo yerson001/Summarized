@@ -85,10 +85,11 @@ private:
    long MAX_MID_VALUE = 1500000;
    long MID_value = 1000000;
    long MIN_MID_VALUE = 500000;
-   long MIN_VALUE = 700;
+   long MIN_VALUE = 1500;
 
    //*** now Qgraphics view and histogram *****+
-   int *arr;
+   //int *arr;
+   vector<int> arr;
    bool color;
    size_t size;
    int flag;
@@ -107,7 +108,8 @@ private:
 
 
    // **** function to get only histogram *******
-   void drawlines(QGraphicsScene *scene, int *array, size_t sizeGiven,QColor c);
+   //void drawlines(QGraphicsScene *scene, int *array, size_t sizeGiven,QColor c);
+   void drawlines(QGraphicsScene *scene, vector<int> array, size_t sizeGiven,QColor c);
    int ValueLines(int val);
    void add_lines(int value);
    void configSensivility();
